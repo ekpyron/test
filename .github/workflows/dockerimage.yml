@@ -17,12 +17,10 @@ jobs:
       run: docker build . --file Dockerfile --tag test
     - name: Push
       run: |
-        docker login docker.pkg.github.com --username "${DOCKER_USERNAME}" --password "${DOCKER_PASSWORD}"
+        echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         export VERSION=$(docker inspect --format="{{.Config.Labels.version}}" test)
         echo ${VERSION}
         docker tag test docker.pkg.github.com/ekpyron/test/test-image:${VERSION}
         docker push docker.pkg.github.com/ekpyron/test/test-image:${VERSION}
       env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
