@@ -19,6 +19,9 @@ jobs:
       run: |
         echo "Context start."
         echo ${{ github.event }}
+        echo "Before: ${{ github.event.before }}"
+        echo "Before: ${{ github.event.after }}"
+        git diff ${{ github.event.before }}..${{ github.event.after }}
         echo "Context end."
         echo "Github event name: ${GITHUB_EVENT_NAME}"
         echo "Github event path: ${GITHUB_EVENT_PATH}"
