@@ -22,6 +22,8 @@ jobs:
         echo "Context end."
         echo "Github event name: ${GITHUB_EVENT_NAME}"
         echo "Github event path: ${GITHUB_EVENT_PATH}"
+        cat ${GITHUB_EVENT_PATH}
+        echo "Github event file end."
         echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         export VERSION=$(docker inspect --format="{{.Config.Labels.version}}" test)
         echo "Version: ${VERSION}"
