@@ -14,12 +14,22 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag test
+      run: docker build . --file Dockerfile --tag test:latest
     - name: Push
       run: |
+        echo "Context start."
+        echo ${{ github.event }}
+        echo "Before: ${{ github.event.before }}"
+        echo "Before: ${{ github.event.after }}"
+        git diff ${{ github.event.before }}..${{ github.event.after }}
+        echo "Context end."
+        echo "Github event name: ${GITHUB_EVENT_NAME}"
+        echo "Github event path: ${GITHUB_EVENT_PATH}"
+        cat ${GITHUB_EVENT_PATH}
+        echo "Github event file end."
         echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         export VERSION=$(docker inspect --format="{{.Config.Labels.version}}" test)
-        echo ${VERSION}
+        echo "Version: ${VERSION}"
         docker tag test docker.pkg.github.com/ekpyron/test/test-image:${VERSION}
         docker push docker.pkg.github.com/ekpyron/test/test-image:${VERSION}
       env:
