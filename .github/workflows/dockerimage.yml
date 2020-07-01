@@ -14,12 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag test
+      run: docker build . --file Dockerfile --tag test:latest
     - name: Push
       run: |
         echo "Context start."
         echo ${{ github.event }}
         echo "Context end."
+        echo "Github event name: ${GITHUB_EVENT_NAME}"
+        echo "Github event path: ${GITHUB_EVENT_PATH}"
         echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         export VERSION=$(docker inspect --format="{{.Config.Labels.version}}" test)
         echo "Version: ${VERSION}"
